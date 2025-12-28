@@ -1,0 +1,63 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '1con/debate-flowsheet-1con.html'
+      - '2con/debate-flowsheet-2con.html'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
+
+      - name: Copy files for release
+        run: |
+          cp 1con/debate-flowsheet-1con.html debate-flowsheet-1con.html
+          cp 2con/debate-flowsheet-2con.html debate-flowsheet-2con.html
+
+      - name: Delete existing latest release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete latest --yes || true
+          git push origin :refs/tags/latest || true
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create latest \
+            --title "最新版 ($(date +'%Y年%m月%d日 %H:%M'))" \
+            --notes "## ダウンロード方法
+
+          以下のファイルをクリックしてダウンロードし、ブラウザで開いてください。
+
+          - **debate-flowsheet-1con.html** - 1立論形式（中学・高校ディベート）
+          - **debate-flowsheet-2con.html** - 2立論形式（大学・社会人ディベート）
+
+          ## 使い方
+
+          1. 上記のHTMLファイルをダウンロード
+          2. ダウンロードしたファイルをダブルクリック
+          3. ブラウザが開いたら、すぐに使用開始できます
+
+          ---
+
+          **完全オフライン動作**: インターネット接続不要で使用できます。
+          **自動保存なし**: データは手動で保存してください（💾 保存ボタン）。
+
+          最終更新: $(date +'%Y年%m月%d日 %H:%M')" \
+            debate-flowsheet-1con.html \
+            debate-flowsheet-2con.html
