@@ -19,7 +19,7 @@
 ### 🎯 ディベートフォーマット
 
 - **1CON形式** - 1立論形式（中学・高校ディベート） ✅ 利用可能
-- **2CON形式** - 2立論形式（大学・社会人ディベート） 🚧 準備中
+- **2CON形式** - 2立論形式（大学・社会人ディベート） ✅ 利用可能
 
 ## 👉 デモページ
 🔗 [https://mikisayaka19.github.io/debate-flowsheet/](https://mikisayaka19.github.io/debate-flowsheet/)
@@ -51,7 +51,7 @@
 
 1. 上記リンクから使用したい形式のHTMLファイルをダウンロード
    - **debate-flowsheet-1con.html** - 1立論形式（中学・高校ディベート）
-   - **debate-flowsheet-2con.html** - 2立論形式（準備中）
+   - **debate-flowsheet-2con.html** - 2立論形式（大学・社会人ディベート）
 2. ダウンロードしたHTMLファイルをダブルクリック
 3. ブラウザが開いたら、すぐに使用開始
 
@@ -119,21 +119,6 @@ GDP向上により雇用が増加する
 - **2NR** - 否定側第2反駁
 - **2AR** - 肯定側第2反駁
 
-
-## 📁 リポジトリ構成
-
-```
-debate-flowsheet/
-├── index.html                        # ランディングページ（形式選択）
-├── 1con/
-│   └── debate-flowsheet-1con.html   # 1CON形式アプリ（高校ディベート）
-├── 2con/
-│   └── debate-flowsheet-2con.html   # 2CON形式アプリ（準備中）
-├── screenshots/                      # スクリーンショット
-├── README.md                         # このファイル
-├── LICENSE                           # MIT License
-└── .gitignore                        # Git除外設定
-```
 
 ## 💾 データの保存と読込
 

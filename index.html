@@ -57,9 +57,6 @@
             padding: 32px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             transition: all 0.3s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
         }
 
         .card:hover {
@@ -101,6 +98,20 @@
             margin-bottom: 20px;
         }
 
+        .card p a {
+            color: #667eea;
+            text-decoration: none;
+            border-bottom: 1px solid #667eea;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p a:hover {
+            color: #5568d3;
+            border-bottom-color: #5568d3;
+        }
+
         .card-features {
             list-style: none;
             margin-bottom: 24px;
@@ -131,6 +142,8 @@
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s;
+            position: relative;
+            z-index: 1;
         }
 
         .btn:hover {
@@ -203,30 +216,30 @@
 
         <div class="cards">
             <!-- 1CON Card -->
-            <a href="1con/debate-flowsheet-1con.html" class="card">
+            <div class="card">
                 <span class="card-badge">利用可能</span>
                 <h2>1CON形式</h2>
                 <div class="card-subtitle">立論1回形式（中学・高校ディベート形式）</div>
-                <p>日本ディベート協会（NADE）の立論が1回の形式に対応。</p>
+                <p>全国教室ディベート連盟（NADE）の<a href="https://nade.jp/koshien/rules/rule/" target="_blank">フォーマット</a>に準拠</p>
                 <ul class="card-features">
                     <li>タイマー・判定・評価記録機能</li>
                     <li>完全オフライン動作</li>
                 </ul>
-                <span class="btn">アプリを起動 →</span>
-            </a>
+                <a href="1con/debate-flowsheet-1con.html" class="btn">アプリを起動 →</a>
+            </div>
 
             <!-- 2CON Card -->
-            <a href="2con/debate-flowsheet-2con.html" class="card">
-                <span class="card-badge coming-soon">準備中</span>
+            <div class="card">
+                <span class="card-badge coming-soon">利用可能</span>
                 <h2>2CON形式</h2>
                 <div class="card-subtitle">立論2回形式（大学・社会人ディベート形式）</div>
-                <p>肯定側・否定側それぞれ立論2回の試合形式に対応予定。</p>
+                <p>日本ディベート協会（JDA）の<a href="https://japan-debate-association.org/contest/rule" target="_blank">フォーマット</a>に準拠</p>
                 <ul class="card-features">
                     <li>タイマー・判定・評価記録機能</li>
                     <li>完全オフライン動作</li>
                 </ul>
-                <span class="btn">詳細を見る →</span>
-            </a>
+                <a href="2con/debate-flowsheet-2con.html" class="btn">詳細を見る →</a>
+            </div>
         </div>
 
         <div class="footer">
