@@ -1,5 +1,12 @@
 # 📝 Debate Flowsheet
 
+[![GitHub Stars](https://img.shields.io/github/stars/mikisayaka19/debate-flowsheet?style=flat&logo=github)](https://github.com/mikisayaka19/debate-flowsheet/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/mikisayaka19/debate-flowsheet?style=flat&logo=github)](https://github.com/mikisayaka19/debate-flowsheet/network/members)
+[![Last Commit](https://img.shields.io/github/last-commit/mikisayaka19/debate-flowsheet?style=flat)](https://github.com/mikisayaka19/debate-flowsheet/commits/main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Demo](https://img.shields.io/badge/demo-GitHub%20Pages-blue?style=flat&logo=github)](https://mikisayaka19.github.io/debate-flowsheet/)
+[![Download](https://img.shields.io/badge/download-Latest%20Release-brightgreen?style=flat&logo=github)](https://github.com/mikisayaka19/debate-flowsheet/releases/latest)
+
 オフラインで動作するディベートフローシートアプリ（NADE非公式）
 
 ![メイン画面](screenshots/001.png)
@@ -15,7 +22,7 @@
 - **2CON形式** - 2立論形式（大学・社会人ディベート） 🚧 準備中
 
 ## 👉 デモページ
-🔗 [https://mikisayaka19.github.io/debate-flowsheet/](https://mikisayaka19.github.io/debate-flowsheet/){:target="_blank"}
+🔗 [https://mikisayaka19.github.io/debate-flowsheet/](https://mikisayaka19.github.io/debate-flowsheet/)
 
 ブラウザで直接お試しいただけます。フロー内容はローカルで完結しサーバーに送信されません。
 
@@ -36,16 +43,22 @@
 
 ### 🌐 アクセス方法
 
-#### オンライン（GitHub Pages）
+#### 💻 オフライン利用（インターネット不要・通信禁止ルール対応）
+
+**📥 最新版のダウンロード**: [Releases](https://github.com/mikisayaka19/debate-flowsheet/releases/latest)
+
+1. 上記リンクから使用したい形式のHTMLファイルをダウンロード
+   - **debate-flowsheet-1con.html** - 1立論形式（中学・高校ディベート）
+   - **debate-flowsheet-2con.html** - 2立論形式（準備中）
+2. ダウンロードしたHTMLファイルをダブルクリック
+3. ブラウザが開いたら、すぐに使用開始
+
+#### 🌐 オンライン（GitHub Pages）
 1. https://mikisayaka19.github.io/debate-flowsheet/ にアクセス
 2. 使用したい形式（1CON/2CON）を選択
 3. アプリが起動
 
-#### オフライン（ローカル）
-1. このリポジトリをダウンロードまたはクローン
-2. zipファイルを展開し、以下のhtmlファイルをダブルクリックする（お使いのブラウザでフローアプリが開きます）:
-   - `1con/index.html` - 1立論形式（中学・高校ディベート）
-   - `2con/index.html` - 2立論形式（準備中）
+ブラウザで直接お試しいただけます。フロー内容はローカルで完結しサーバーに送信されません。
 
 ### 💡 基本的な使用方法
 

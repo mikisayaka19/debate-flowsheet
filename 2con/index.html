@@ -958,23 +958,20 @@
 
     <div class="instructions" id="instructions">
         <button class="close-instructions" onclick="closeInstructions()">×</button>
-        <h4>📝 使い方</h4>
+        <h4>📝 基本的な使い方</h4>
         <ul>
-            <li><code>#</code> で見出しを作成（ブロック化）</li>
-            <li>見出しの下に内容を記入</li>
-            <li><strong>論点の参照：</strong> <code>> AC-0</code> のように書くと他のブロックを参照できます</li>
-            <li>参照されたブロックには自動的にバッジが表示されます</li>
-            <li>参照リンクやバッジをクリックすると該当ブロックがハイライトされます</li>
             <li>「保存」でJSON形式で保存</li>
             <li>「読込」で保存したデータを復元</li>
             <li>「出力」でMarkdownまたはテキスト形式で出力</li>
         </ul>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            <strong>参照記法（省略形）：</strong><br>
-            <code>AC</code>=肯定側立論, <code>NQ</code>=否定側質疑, <code>NC</code>=否定側立論, <code>AQ</code>=肯定側質疑<br>
-            <code>1NR</code>=否定側第1反駁, <code>1AR</code>=肯定側第1反駁, <code>2NR</code>=否定側第2反駁, <code>2AR</code>=肯定側第2反駁<br>
-            <strong>例：</strong> <code>> AC-0</code>, <code>> 1NR-2</code>, <code>> 2AR-1</code>
-        </p>
+        <h4>✨ 応用的な使い方</h4>
+        <ul>
+            <li><code>#</code> で見出しを作成（ブロック化）</li>
+            <li>見出しの下に内容を記入</li>
+            <li><strong>論点の参照：</strong> <code>> AC-0</code> のように、ブロックIDを指定すると他のブロックを参照できます</li>
+            <li>参照されたブロックには自動的にバッジが表示されます</li>
+            <li>参照リンクやバッジをクリックすると該当ブロックがハイライトされます</li>
+        </ul>
     </div>
 
     <div class="export-modal" id="exportModal">
