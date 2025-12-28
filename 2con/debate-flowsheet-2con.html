@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 2CON形式フローシート（準備中）</title>
+    <title> 2CON形式フローシート</title>
     <style>
         * {
             margin: 0;
@@ -187,9 +187,9 @@
 
         .flow-row {
             display: grid;
-            grid-template-columns: repeat(6, minmax(200px, 1fr));
+            grid-template-columns: repeat(12, minmax(180px, 1fr));
             gap: 12px;
-            min-width: 1200px;
+            min-width: 2200px;
         }
 
         .flow-row-label {
@@ -829,7 +829,7 @@
         <div class="header-top">
             <div class="logo">
                 <div class="logo-icon">⚖️</div>
-                🚧 準備中 ディベートフローシート（2立論形式）
+                ディベートフローシート（2立論形式）
             </div>
             <div class="header-actions">
                 <button class="btn" id="themeBtn" onclick="toggleTheme()">🌙 ダーク</button>
@@ -893,9 +893,12 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>立論</th>
-                        <th>質疑</th>
-                        <th>応答</th>
+                        <th>立論1</th>
+                        <th>立論2</th>
+                        <th>質疑1</th>
+                        <th>質疑2</th>
+                        <th>応答1</th>
+                        <th>応答2</th>
                         <th>第1反駁</th>
                         <th>第2反駁</th>
                         <th>減点</th>
@@ -905,9 +908,12 @@
                 <tbody>
                     <tr class="aff">
                         <td>肯定側</td>
-                        <td><input type="number" id="comm-aff-const" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
-                        <td><input type="number" id="comm-aff-cx" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
-                        <td><input type="number" id="comm-aff-response" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-const1" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-const2" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-cx1" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-cx2" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-response1" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-response2" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
                         <td><input type="number" id="comm-aff-1r" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
                         <td><input type="number" id="comm-aff-2r" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
                         <td>
@@ -924,9 +930,12 @@
                     </tr>
                     <tr class="neg">
                         <td>否定側</td>
-                        <td><input type="number" id="comm-neg-const" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
-                        <td><input type="number" id="comm-neg-cx" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
-                        <td><input type="number" id="comm-neg-response" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-const1" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-const2" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-cx1" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-cx2" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-response1" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-response2" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
                         <td><input type="number" id="comm-neg-1r" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
                         <td><input type="number" id="comm-neg-2r" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
                         <td>
@@ -994,32 +1003,68 @@
     <input type="file" id="fileInput" accept=".json" style="display: none" onchange="handleFileImport(event)">
 
     <script>
-        // Column definitions based on NADE High School format
+        // Column definitions for 2CON format (university/adult debate)
         // Each column can have different content for aff row and neg row
         const columns = [
+            // 1. 肯定側第1立論 (上段のみ)
             {
-                affSpeech: { id: 'aff-const', name: '肯定側立論 (AC)', side: 'aff', time: '6分 / 4分' },
-                negSpeech: { id: 'neg-const', name: '否定側立論 (NC)', side: 'neg', time: '6分 / 4分' }
+                affSpeech: { id: 'aff-1const', name: '肯定側第1立論 (1AC)', side: 'aff', time: '6分' },
+                negSpeech: null
             },
+            // 2. 否定側第1質疑 (上段のみ)
             {
-                affSpeech: { id: 'neg-cx', name: '否定側質疑 (NQ)', side: 'neg', time: '3分 / 2分' },
-                negSpeech: { id: 'aff-cx', name: '肯定側質疑 (AQ)', side: 'aff', time: '3分 / 2分' }
+                affSpeech: { id: 'neg-1cx', name: '否定側第1質疑 (1NQ)', side: 'neg', time: '3分' },
+                negSpeech: null
             },
+            // 3. 否定側第1立論 (上段・下段)
             {
-                affSpeech: { id: 'neg-1r', name: '否定側第1反駁 (1NR)', side: 'neg', time: '4分 / 3分' },
-                negSpeech: null // 下段は空
+                affSpeech: { id: 'neg-1const-aff', name: '否定側第1立論 (1NC)', side: 'neg', time: '6分' },
+                negSpeech: { id: 'neg-1const-neg', name: '否定側第1立論 (1NC)', side: 'neg', time: '6分' }
             },
+            // 4. 肯定側第1質疑 (上段・下段)
             {
-                affSpeech: { id: 'aff-1r', name: '肯定側第1反駁 (1AR)', side: 'aff', time: '4分 / 3分' },
-                negSpeech: { id: 'aff-1r-neg', name: '肯定側第1反駁 (1AR)', side: 'aff', time: '4分 / 3分' }
+                affSpeech: { id: 'aff-1cx-aff', name: '肯定側第1質疑 (1AQ)', side: 'aff', time: '3分' },
+                negSpeech: { id: 'aff-1cx-neg', name: '肯定側第1質疑 (1AQ)', side: 'aff', time: '3分' }
             },
+            // 5. 肯定側第2立論 (上段・下段)
             {
-                affSpeech: { id: 'neg-2r', name: '否定側第2反駁 (2NR)', side: 'neg', time: '4分 / 3分' },
-                negSpeech: { id: 'neg-2r-neg', name: '否定側第2反駁 (2NR)', side: 'neg', time: '4分 / 3分' }
+                affSpeech: { id: 'aff-2const-aff', name: '肯定側第2立論 (2AC)', side: 'aff', time: '6分' },
+                negSpeech: { id: 'aff-2const-neg', name: '肯定側第2立論 (2AC)', side: 'aff', time: '6分' }
             },
+            // 6. 否定側第2質疑 (上段・下段)
             {
-                affSpeech: { id: 'aff-2r', name: '肯定側第2反駁 (2AR)', side: 'aff', time: '4分 / 3分' },
-                negSpeech: { id: 'aff-2r-neg', name: '肯定側第2反駁 (2AR)', side: 'aff', time: '4分 / 3分' }
+                affSpeech: { id: 'neg-2cx-aff', name: '否定側第2質疑 (2NQ)', side: 'neg', time: '3分' },
+                negSpeech: { id: 'neg-2cx-neg', name: '否定側第2質疑 (2NQ)', side: 'neg', time: '3分' }
+            },
+            // 7. 否定側第2立論 (上段・下段)
+            {
+                affSpeech: { id: 'neg-2const-aff', name: '否定側第2立論 (2NC)', side: 'neg', time: '6分' },
+                negSpeech: { id: 'neg-2const-neg', name: '否定側第2立論 (2NC)', side: 'neg', time: '6分' }
+            },
+            // 8. 肯定側第2質疑 (上段・下段)
+            {
+                affSpeech: { id: 'aff-2cx-aff', name: '肯定側第2質疑 (2AQ)', side: 'aff', time: '3分' },
+                negSpeech: { id: 'aff-2cx-neg', name: '肯定側第2質疑 (2AQ)', side: 'aff', time: '3分' }
+            },
+            // 9. 否定側第1反駁 (上段・下段)
+            {
+                affSpeech: { id: 'neg-1r-aff', name: '否定側第1反駁 (1NR)', side: 'neg', time: '4分' },
+                negSpeech: { id: 'neg-1r-neg', name: '否定側第1反駁 (1NR)', side: 'neg', time: '4分' }
+            },
+            // 10. 肯定側第1反駁 (上段・下段)
+            {
+                affSpeech: { id: 'aff-1r-aff', name: '肯定側第1反駁 (1AR)', side: 'aff', time: '4分' },
+                negSpeech: { id: 'aff-1r-neg', name: '肯定側第1反駁 (1AR)', side: 'aff', time: '4分' }
+            },
+            // 11. 否定側第2反駁 (上段・下段)
+            {
+                affSpeech: { id: 'neg-2r-aff', name: '否定側第2反駁 (2NR)', side: 'neg', time: '4分' },
+                negSpeech: { id: 'neg-2r-neg', name: '否定側第2反駁 (2NR)', side: 'neg', time: '4分' }
+            },
+            // 12. 肯定側第2反駁 (上段・下段)
+            {
+                affSpeech: { id: 'aff-2r-aff', name: '肯定側第2反駁 (2AR)', side: 'aff', time: '4分' },
+                negSpeech: { id: 'aff-2r-neg', name: '肯定側第2反駁 (2AR)', side: 'aff', time: '4分' }
             }
         ];
 
@@ -1134,17 +1179,33 @@
         // Convert column ID to short form
         function getShortColumnId(columnId) {
             const columnMap = {
-                'aff-const': 'AC',
-                'neg-cx': 'NQ',
-                'neg-const': 'NC',
-                'aff-cx': 'AQ',
-                'neg-1r': '1NR',
-                'aff-1r': '1AR',
-                'aff-1r-neg': '1AR',  // Both rows use same short ID
-                'neg-2r': '2NR',
-                'neg-2r-neg': '2NR',  // Both rows use same short ID
-                'aff-2r': '2AR',
-                'aff-2r-neg': '2AR'   // Both rows use same short ID
+                // 肯定側第1立論・質疑
+                'aff-1const': '1AC',
+                'neg-1cx': '1NQ',
+                // 否定側第1立論・質疑
+                'neg-1const-aff': '1NC',
+                'neg-1const-neg': '1NC',
+                'aff-1cx-aff': '1AQ',
+                'aff-1cx-neg': '1AQ',
+                // 肯定側第2立論・質疑
+                'aff-2const-aff': '2AC',
+                'aff-2const-neg': '2AC',
+                'neg-2cx-aff': '2NQ',
+                'neg-2cx-neg': '2NQ',
+                // 否定側第2立論・質疑
+                'neg-2const-aff': '2NC',
+                'neg-2const-neg': '2NC',
+                'aff-2cx-aff': '2AQ',
+                'aff-2cx-neg': '2AQ',
+                // 反駁
+                'neg-1r-aff': '1NR',
+                'neg-1r-neg': '1NR',
+                'aff-1r-aff': '1AR',
+                'aff-1r-neg': '1AR',
+                'neg-2r-aff': '2NR',
+                'neg-2r-neg': '2NR',
+                'aff-2r-aff': '2AR',
+                'aff-2r-neg': '2AR'
             };
             return columnMap[columnId] || columnId;
         }
@@ -1313,7 +1374,7 @@
 
         // Calculate communication points total
         function calculateCommTotal(side) {
-            const stages = ['const', 'cx', 'response', '1r', '2r'];
+            const stages = ['const1', 'const2', 'cx1', 'cx2', 'response1', 'response2', '1r', '2r'];
             let total = 0;
 
             stages.forEach(stage => {
@@ -1362,17 +1423,23 @@
                 judgeComments: document.getElementById('judgeComments').value,
                 commPoints: {
                     aff: {
-                        const: document.getElementById('comm-aff-const').value,
-                        cx: document.getElementById('comm-aff-cx').value,
-                        response: document.getElementById('comm-aff-response').value,
+                        const1: document.getElementById('comm-aff-const1').value,
+                        const2: document.getElementById('comm-aff-const2').value,
+                        cx1: document.getElementById('comm-aff-cx1').value,
+                        cx2: document.getElementById('comm-aff-cx2').value,
+                        response1: document.getElementById('comm-aff-response1').value,
+                        response2: document.getElementById('comm-aff-response2').value,
                         '1r': document.getElementById('comm-aff-1r').value,
                         '2r': document.getElementById('comm-aff-2r').value,
                         penalty: document.getElementById('comm-aff-penalty').value
                     },
                     neg: {
-                        const: document.getElementById('comm-neg-const').value,
-                        cx: document.getElementById('comm-neg-cx').value,
-                        response: document.getElementById('comm-neg-response').value,
+                        const1: document.getElementById('comm-neg-const1').value,
+                        const2: document.getElementById('comm-neg-const2').value,
+                        cx1: document.getElementById('comm-neg-cx1').value,
+                        cx2: document.getElementById('comm-neg-cx2').value,
+                        response1: document.getElementById('comm-neg-response1').value,
+                        response2: document.getElementById('comm-neg-response2').value,
                         '1r': document.getElementById('comm-neg-1r').value,
                         '2r': document.getElementById('comm-neg-2r').value,
                         penalty: document.getElementById('comm-neg-penalty').value
@@ -1430,17 +1497,23 @@
             const judgeComments = document.getElementById('judgeComments').value || '（コメントなし）';
 
             // Communication points
-            const commAffConst = document.getElementById('comm-aff-const').value || '-';
-            const commAffCx = document.getElementById('comm-aff-cx').value || '-';
-            const commAffResponse = document.getElementById('comm-aff-response').value || '-';
+            const commAffConst1 = document.getElementById('comm-aff-const1').value || '-';
+            const commAffConst2 = document.getElementById('comm-aff-const2').value || '-';
+            const commAffCx1 = document.getElementById('comm-aff-cx1').value || '-';
+            const commAffCx2 = document.getElementById('comm-aff-cx2').value || '-';
+            const commAffResponse1 = document.getElementById('comm-aff-response1').value || '-';
+            const commAffResponse2 = document.getElementById('comm-aff-response2').value || '-';
             const commAff1r = document.getElementById('comm-aff-1r').value || '-';
             const commAff2r = document.getElementById('comm-aff-2r').value || '-';
             const commAffPenalty = document.getElementById('comm-aff-penalty').value || '0';
             const commAffTotal = document.getElementById('comm-aff-total').textContent || '0';
 
-            const commNegConst = document.getElementById('comm-neg-const').value || '-';
-            const commNegCx = document.getElementById('comm-neg-cx').value || '-';
-            const commNegResponse = document.getElementById('comm-neg-response').value || '-';
+            const commNegConst1 = document.getElementById('comm-neg-const1').value || '-';
+            const commNegConst2 = document.getElementById('comm-neg-const2').value || '-';
+            const commNegCx1 = document.getElementById('comm-neg-cx1').value || '-';
+            const commNegCx2 = document.getElementById('comm-neg-cx2').value || '-';
+            const commNegResponse1 = document.getElementById('comm-neg-response1').value || '-';
+            const commNegResponse2 = document.getElementById('comm-neg-response2').value || '-';
             const commNeg1r = document.getElementById('comm-neg-1r').value || '-';
             const commNeg2r = document.getElementById('comm-neg-2r').value || '-';
             const commNegPenalty = document.getElementById('comm-neg-penalty').value || '0';
@@ -1471,10 +1544,10 @@
 
             // Communication Points
             markdown += `## コミュニケーション点\n\n`;
-            markdown += `| | 立論 | 質疑 | 応答 | 第1反駁 | 第2反駁 | 減点 | 合計 |\n`;
-            markdown += `|---|---|---|---|---|---|---|---|\n`;
-            markdown += `| **肯定側** | ${commAffConst} | ${commAffCx} | ${commAffResponse} | ${commAff1r} | ${commAff2r} | ${commAffPenalty} | **${commAffTotal}** |\n`;
-            markdown += `| **否定側** | ${commNegConst} | ${commNegCx} | ${commNegResponse} | ${commNeg1r} | ${commNeg2r} | ${commNegPenalty} | **${commNegTotal}** |\n\n`;
+            markdown += `| | 立論1 | 立論2 | 質疑1 | 質疑2 | 応答1 | 応答2 | 第1反駁 | 第2反駁 | 減点 | 合計 |\n`;
+            markdown += `|---|---|---|---|---|---|---|---|---|---|---|\n`;
+            markdown += `| **肯定側** | ${commAffConst1} | ${commAffConst2} | ${commAffCx1} | ${commAffCx2} | ${commAffResponse1} | ${commAffResponse2} | ${commAff1r} | ${commAff2r} | ${commAffPenalty} | **${commAffTotal}** |\n`;
+            markdown += `| **否定側** | ${commNegConst1} | ${commNegConst2} | ${commNegCx1} | ${commNegCx2} | ${commNegResponse1} | ${commNegResponse2} | ${commNeg1r} | ${commNeg2r} | ${commNegPenalty} | **${commNegTotal}** |\n\n`;
 
             // Judge comments
             markdown += `## 講評\n\n`;
@@ -1483,38 +1556,81 @@
             // Speech content in order
             markdown += `## 試合内容\n\n`;
 
-            // Single-row speeches
-            const affConstContent = document.querySelector('textarea[data-column="aff-const"]')?.value || '';
-            const negCxContent = document.querySelector('textarea[data-column="neg-cx"]')?.value || '';
-            const negConstContent = document.querySelector('textarea[data-column="neg-const"]')?.value || '';
-            const affCxContent = document.querySelector('textarea[data-column="aff-cx"]')?.value || '';
-            const neg1rContent = document.querySelector('textarea[data-column="neg-1r"]')?.value || '';
+            // 1. 肯定側第1立論 (上段のみ)
+            const aff1ConstContent = document.querySelector('textarea[data-column="aff-1const"]')?.value || '';
+            markdown += `### 肯定側第1立論 (1AC)\n\n${wrapContent(aff1ConstContent)}\n\n`;
 
-            markdown += `### 肯定側立論\n\n${wrapContent(affConstContent)}\n\n`;
-            markdown += `### 否定側質疑\n\n${wrapContent(negCxContent)}\n\n`;
-            markdown += `### 否定側立論\n\n${wrapContent(negConstContent)}\n\n`;
-            markdown += `### 肯定側質疑\n\n${wrapContent(affCxContent)}\n\n`;
-            markdown += `### 否定側第1反駁\n\n${wrapContent(neg1rContent)}\n\n`;
+            // 2. 否定側第1質疑 (上段のみ)
+            const neg1CxContent = document.querySelector('textarea[data-column="neg-1cx"]')?.value || '';
+            markdown += `### 否定側第1質疑 (1NQ)\n\n${wrapContent(neg1CxContent)}\n\n`;
 
-            // Two-row speeches (aff-1r, neg-2r, aff-2r)
-            const aff1rAffContent = document.querySelector('textarea[data-column="aff-1r"]')?.value || '';
+            // 3. 否定側第1立論 (上段・下段)
+            const neg1ConstAffContent = document.querySelector('textarea[data-column="neg-1const-aff"]')?.value || '';
+            const neg1ConstNegContent = document.querySelector('textarea[data-column="neg-1const-neg"]')?.value || '';
+            markdown += `### 否定側第1立論 (1NC)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(neg1ConstAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(neg1ConstNegContent)}\n\n`;
+
+            // 4. 肯定側第1質疑 (上段・下段)
+            const aff1CxAffContent = document.querySelector('textarea[data-column="aff-1cx-aff"]')?.value || '';
+            const aff1CxNegContent = document.querySelector('textarea[data-column="aff-1cx-neg"]')?.value || '';
+            markdown += `### 肯定側第1質疑 (1AQ)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(aff1CxAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(aff1CxNegContent)}\n\n`;
+
+            // 5. 肯定側第2立論 (上段・下段)
+            const aff2ConstAffContent = document.querySelector('textarea[data-column="aff-2const-aff"]')?.value || '';
+            const aff2ConstNegContent = document.querySelector('textarea[data-column="aff-2const-neg"]')?.value || '';
+            markdown += `### 肯定側第2立論 (2AC)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(aff2ConstAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(aff2ConstNegContent)}\n\n`;
+
+            // 6. 否定側第2質疑 (上段・下段)
+            const neg2CxAffContent = document.querySelector('textarea[data-column="neg-2cx-aff"]')?.value || '';
+            const neg2CxNegContent = document.querySelector('textarea[data-column="neg-2cx-neg"]')?.value || '';
+            markdown += `### 否定側第2質疑 (2NQ)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(neg2CxAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(neg2CxNegContent)}\n\n`;
+
+            // 7. 否定側第2立論 (上段・下段)
+            const neg2ConstAffContent = document.querySelector('textarea[data-column="neg-2const-aff"]')?.value || '';
+            const neg2ConstNegContent = document.querySelector('textarea[data-column="neg-2const-neg"]')?.value || '';
+            markdown += `### 否定側第2立論 (2NC)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(neg2ConstAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(neg2ConstNegContent)}\n\n`;
+
+            // 8. 肯定側第2質疑 (上段・下段)
+            const aff2CxAffContent = document.querySelector('textarea[data-column="aff-2cx-aff"]')?.value || '';
+            const aff2CxNegContent = document.querySelector('textarea[data-column="aff-2cx-neg"]')?.value || '';
+            markdown += `### 肯定側第2質疑 (2AQ)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(aff2CxAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(aff2CxNegContent)}\n\n`;
+
+            // 9. 否定側第1反駁 (上段・下段)
+            const neg1rAffContent = document.querySelector('textarea[data-column="neg-1r-aff"]')?.value || '';
+            const neg1rNegContent = document.querySelector('textarea[data-column="neg-1r-neg"]')?.value || '';
+            markdown += `### 否定側第1反駁 (1NR)\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(neg1rAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(neg1rNegContent)}\n\n`;
+
+            // 10. 肯定側第1反駁 (上段・下段)
+            const aff1rAffContent = document.querySelector('textarea[data-column="aff-1r-aff"]')?.value || '';
             const aff1rNegContent = document.querySelector('textarea[data-column="aff-1r-neg"]')?.value || '';
-
-            markdown += `### 肯定側第1反駁\n\n`;
+            markdown += `### 肯定側第1反駁 (1AR)\n\n`;
             markdown += `#### 肯定側の議論\n\n${wrapContent(aff1rAffContent)}\n\n`;
             markdown += `#### 否定側の議論\n\n${wrapContent(aff1rNegContent)}\n\n`;
 
-            const neg2rAffContent = document.querySelector('textarea[data-column="neg-2r"]')?.value || '';
+            // 11. 否定側第2反駁 (上段・下段)
+            const neg2rAffContent = document.querySelector('textarea[data-column="neg-2r-aff"]')?.value || '';
             const neg2rNegContent = document.querySelector('textarea[data-column="neg-2r-neg"]')?.value || '';
-
-            markdown += `### 否定側第2反駁\n\n`;
+            markdown += `### 否定側第2反駁 (2NR)\n\n`;
             markdown += `#### 肯定側の議論\n\n${wrapContent(neg2rAffContent)}\n\n`;
             markdown += `#### 否定側の議論\n\n${wrapContent(neg2rNegContent)}\n\n`;
 
-            const aff2rAffContent = document.querySelector('textarea[data-column="aff-2r"]')?.value || '';
+            // 12. 肯定側第2反駁 (上段・下段)
+            const aff2rAffContent = document.querySelector('textarea[data-column="aff-2r-aff"]')?.value || '';
             const aff2rNegContent = document.querySelector('textarea[data-column="aff-2r-neg"]')?.value || '';
-
-            markdown += `### 肯定側第2反駁\n\n`;
+            markdown += `### 肯定側第2反駁 (2AR)\n\n`;
             markdown += `#### 肯定側の議論\n\n${wrapContent(aff2rAffContent)}\n\n`;
             markdown += `#### 否定側の議論\n\n${wrapContent(aff2rNegContent)}\n\n`;
 
@@ -1588,18 +1704,24 @@
                     // Restore communication points
                     if (data.commPoints) {
                         if (data.commPoints.aff) {
-                            document.getElementById('comm-aff-const').value = data.commPoints.aff.const || '';
-                            document.getElementById('comm-aff-cx').value = data.commPoints.aff.cx || '';
-                            document.getElementById('comm-aff-response').value = data.commPoints.aff.response || '';
+                            document.getElementById('comm-aff-const1').value = data.commPoints.aff.const1 || '';
+                            document.getElementById('comm-aff-const2').value = data.commPoints.aff.const2 || '';
+                            document.getElementById('comm-aff-cx1').value = data.commPoints.aff.cx1 || '';
+                            document.getElementById('comm-aff-cx2').value = data.commPoints.aff.cx2 || '';
+                            document.getElementById('comm-aff-response1').value = data.commPoints.aff.response1 || '';
+                            document.getElementById('comm-aff-response2').value = data.commPoints.aff.response2 || '';
                             document.getElementById('comm-aff-1r').value = data.commPoints.aff['1r'] || '';
                             document.getElementById('comm-aff-2r').value = data.commPoints.aff['2r'] || '';
                             document.getElementById('comm-aff-penalty').value = data.commPoints.aff.penalty || '0';
                             calculateCommTotal('aff');
                         }
                         if (data.commPoints.neg) {
-                            document.getElementById('comm-neg-const').value = data.commPoints.neg.const || '';
-                            document.getElementById('comm-neg-cx').value = data.commPoints.neg.cx || '';
-                            document.getElementById('comm-neg-response').value = data.commPoints.neg.response || '';
+                            document.getElementById('comm-neg-const1').value = data.commPoints.neg.const1 || '';
+                            document.getElementById('comm-neg-const2').value = data.commPoints.neg.const2 || '';
+                            document.getElementById('comm-neg-cx1').value = data.commPoints.neg.cx1 || '';
+                            document.getElementById('comm-neg-cx2').value = data.commPoints.neg.cx2 || '';
+                            document.getElementById('comm-neg-response1').value = data.commPoints.neg.response1 || '';
+                            document.getElementById('comm-neg-response2').value = data.commPoints.neg.response2 || '';
                             document.getElementById('comm-neg-1r').value = data.commPoints.neg['1r'] || '';
                             document.getElementById('comm-neg-2r').value = data.commPoints.neg['2r'] || '';
                             document.getElementById('comm-neg-penalty').value = data.commPoints.neg.penalty || '0';
@@ -1650,7 +1772,7 @@
 
             // Clear communication points
             ['aff', 'neg'].forEach(side => {
-                ['const', 'cx', 'response', '1r', '2r'].forEach(stage => {
+                ['const1', 'const2', 'cx1', 'cx2', 'response1', 'response2', '1r', '2r'].forEach(stage => {
                     document.getElementById(`comm-${side}-${stage}`).value = '';
                 });
                 document.getElementById(`comm-${side}-penalty`).value = '0';
