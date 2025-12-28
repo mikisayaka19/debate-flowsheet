@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 2CON形式フローシート（準備中）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-aff: #3fb950;
+            --accent-aff-dim: rgba(63, 185, 80, 0.15);
+            --accent-neg: #f85149;
+            --accent-neg-dim: rgba(248, 81, 73, 0.15);
+            --accent-blue: #58a6ff;
+            --accent-purple: #bc8cff;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Light Theme */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-tertiary: #ffffff;
+            --border-color: #d0d7de;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #6e7781;
+            --accent-aff: #1a7f37;
+            --accent-aff-dim: rgba(26, 127, 55, 0.1);
+            --accent-neg: #cf222e;
+            --accent-neg-dim: rgba(207, 34, 46, 0.1);
+            --accent-blue: #0969da;
+            --accent-purple: #8250df;
+            --shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-aff), var(--accent-neg));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .header-notice {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 8px 0;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .header-notice-icon {
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--border-color);
+        }
+
+
+        /* Meta Info */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto auto;
+            gap: 16px;
+            align-items: end;
+        }
+
+        .meta-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-field label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-field input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .meta-field input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .team-input.aff {
+            border-left: 3px solid var(--accent-aff);
+        }
+
+        .team-input.neg {
+            border-left: 3px solid var(--accent-neg);
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Flow Grid */
+        .flow-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .flow-row {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(200px, 1fr));
+            gap: 12px;
+            min-width: 1200px;
+        }
+
+        .flow-row-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .flow-row-label.aff {
+            background: var(--accent-aff-dim);
+            color: var(--accent-aff);
+        }
+
+        .flow-row-label.neg {
+            background: var(--accent-neg-dim);
+            color: var(--accent-neg);
+        }
+
+        .flow-section {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .flow-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .flow-column-spacer {
+            min-height: 1px;
+        }
+
+        /* Timer Styles */
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .timer-btn {
+            padding: 6px 12px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .timer-btn:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-1px);
+        }
+
+        .timer-btn:active {
+            transform: translateY(0);
+        }
+
+        .timer-btn.reset {
+            background: var(--text-tertiary);
+        }
+
+        .timer-btn.reset:hover {
+            background: var(--text-secondary);
+        }
+
+        .timer-display {
+            font-size: 24px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            min-width: 80px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .timer-display.warning {
+            color: #f59e0b;
+        }
+
+        .timer-display.critical {
+            color: #ef4444;
+        }
+
+        .timer-presets {
+            display: flex;
+            gap: 4px;
+        }
+
+        .timer-preset-btn {
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .timer-preset-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+        }
+
+        .timer-preset-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .flow-column {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-header {
+            padding: 12px 16px;
+            font-weight: 500;
+            font-size: 13px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .column-header.aff {
+            background: var(--accent-aff-dim);
+            color: var(--accent-aff);
+        }
+
+        .column-header.neg {
+            background: var(--accent-neg-dim);
+            color: var(--accent-neg);
+        }
+
+        .column-header .time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .column-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-input {
+            flex: 1;
+            min-height: 300px;
+            background: transparent;
+            border: none;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            resize: none;
+        }
+
+        .text-input:focus {
+            outline: none;
+        }
+
+        .text-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Block Preview */
+        .block-preview {
+            padding: 12px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .block-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .block-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .block-item:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .block-item.highlighted {
+            border-color: var(--accent-purple);
+            background: var(--accent-purple);
+            background: linear-gradient(90deg, rgba(130, 80, 223, 0.15) 0%, transparent 100%);
+            box-shadow: 0 0 0 2px var(--accent-purple);
+        }
+
+        .block-title {
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: var(--accent-blue);
+        }
+
+        .block-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .block-reference {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 0 2px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .block-reference:hover {
+            background: var(--accent-purple);
+            transform: translateY(-1px);
+        }
+
+        .block-reference.invalid {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .referenced-by-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-size: 10px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .ref-badge {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: var(--accent-blue);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ref-badge:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .block-id {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+
+        /* Instructions */
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 300px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow);
+            z-index: 200;
+            display: none;
+        }
+
+        .instructions h4 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+        }
+
+        .instructions code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        .close-instructions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Export Format Modal */
+        .export-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .export-modal.show {
+            display: flex;
+        }
+
+        .export-modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 400px;
+            box-shadow: var(--shadow);
+        }
+
+        .export-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .export-modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .export-option-btn {
+            padding: 16px 24px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .export-option-btn:hover {
+            border-color: var(--accent-blue);
+            background: var(--bg-primary);
+        }
+
+        .export-option-btn-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .export-option-btn-desc {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .export-modal-cancel {
+            margin-top: 16px;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .export-modal-cancel:hover {
+            color: var(--text-primary);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Judgment Section */
+        .judgment-section {
+            margin-top: 32px;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .judgment-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .verdict-container {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .verdict-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verdict-field label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .verdict-field input[type="number"] {
+            width: 60px;
+            padding: 6px 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .verdict-field select {
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .comm-points-table {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            overflow: hidden;
+            border-collapse: collapse;
+        }
+
+        .comm-points-table th,
+        .comm-points-table td {
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comm-points-table th {
+            background: var(--bg-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .comm-points-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comm-points-table tr.aff td:first-child {
+            color: var(--accent-aff);
+        }
+
+        .comm-points-table tr.neg td:first-child {
+            color: var(--accent-neg);
+        }
+
+        .comm-points-table input {
+            width: 50px;
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .comm-points-table select {
+            width: 60px;
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .comm-total-cell {
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-size: 15px;
+        }
+
+        .comments-section {
+            margin-top: 20px;
+        }
+
+        .comments-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .comments-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .comments-textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .comments-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .header, .instructions, .btn {
+                display: none;
+            }
+            .flow-column {
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-notice">
+            <span class="header-notice-icon">🔒</span>このアプリは通信機能を使用せず、ブラウザ上で完全にオフライン動作します。入力内容は自動保存されないため、必ず「💾 保存」ボタンでファイルをダウンロードしてください。
+        </div>
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon">⚖️</div>
+                🚧 準備中 ディベートフローシート（2立論形式）
+            </div>
+            <div class="header-actions">
+                <button class="btn" id="themeBtn" onclick="toggleTheme()">🌙 ダーク</button>
+                <button class="btn" onclick="toggleInstructions()">❓ 使い方</button>
+                <button class="btn" onclick="clearAll()">🗑️ クリア</button>
+                <button class="btn" onclick="exportData()">💾 保存</button>
+                <button class="btn" onclick="importData()">📂 読込</button>
+                <button class="btn" onclick="exportMarkdown()">📄 出力</button>
+            </div>
+        </div>
+        <div class="meta-grid">
+            <div class="meta-field">
+                <label>論題</label>
+                <input type="text" id="topic" placeholder="例：日本は首相公選制を導入すべきである。是か非か">
+            </div>
+            <div class="meta-field">
+                <label>肯定側</label>
+                <input type="text" id="affTeam" class="team-input aff" placeholder="学校名">
+            </div>
+            <div class="meta-field">
+                <label>否定側</label>
+                <input type="text" id="negTeam" class="team-input neg" placeholder="学校名">
+            </div>
+            <div class="meta-field">
+                <label>日時</label>
+                <input type="text" id="dateTime" placeholder="2024/12/21">
+            </div>
+            <div class="meta-field">
+                <label>記入者</label>
+                <input type="text" id="author" placeholder="名前">
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="flow-grid" id="flowGrid">
+            <!-- Columns will be generated by JavaScript -->
+        </div>
+
+        <div class="judgment-section">
+            <h3 class="judgment-title">📊 判定・評価</h3>
+
+            <!-- Verdict -->
+            <div class="verdict-container">
+                <div class="verdict-field">
+                    <input type="number" id="verdictAff" min="0" placeholder="0" oninput="updateVerdictDisplay()">
+                    <label>-</label>
+                    <input type="number" id="verdictNeg" min="0" placeholder="0" oninput="updateVerdictDisplay()">
+                    <label>で</label>
+                    <select id="verdictWinner" onchange="updateVerdictDisplay()">
+                        <option value="">選択</option>
+                        <option value="aff">肯定側</option>
+                        <option value="neg">否定側</option>
+                    </select>
+                    <label>の勝利</label>
+                </div>
+            </div>
+
+            <!-- Communication Points -->
+            <table class="comm-points-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>立論</th>
+                        <th>質疑</th>
+                        <th>応答</th>
+                        <th>第1反駁</th>
+                        <th>第2反駁</th>
+                        <th>減点</th>
+                        <th>合計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="aff">
+                        <td>肯定側</td>
+                        <td><input type="number" id="comm-aff-const" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-cx" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-response" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-1r" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td><input type="number" id="comm-aff-2r" min="1" max="5" oninput="calculateCommTotal('aff')"></td>
+                        <td>
+                            <select id="comm-aff-penalty" onchange="calculateCommTotal('aff')">
+                                <option value="0">0</option>
+                                <option value="-1">-1</option>
+                                <option value="-2">-2</option>
+                                <option value="-3">-3</option>
+                                <option value="-4">-4</option>
+                                <option value="-5">-5</option>
+                            </select>
+                        </td>
+                        <td class="comm-total-cell" id="comm-aff-total">0</td>
+                    </tr>
+                    <tr class="neg">
+                        <td>否定側</td>
+                        <td><input type="number" id="comm-neg-const" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-cx" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-response" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-1r" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td><input type="number" id="comm-neg-2r" min="1" max="5" oninput="calculateCommTotal('neg')"></td>
+                        <td>
+                            <select id="comm-neg-penalty" onchange="calculateCommTotal('neg')">
+                                <option value="0">0</option>
+                                <option value="-1">-1</option>
+                                <option value="-2">-2</option>
+                                <option value="-3">-3</option>
+                                <option value="-4">-4</option>
+                                <option value="-5">-5</option>
+                            </select>
+                        </td>
+                        <td class="comm-total-cell" id="comm-neg-total">0</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <div class="comments-title">講評コメント</div>
+                <textarea id="judgeComments" class="comments-textarea" placeholder="試合全体の講評、各チームへのフィードバック等を記入..."></textarea>
+            </div>
+        </div>
+    </main>
+
+    <div class="instructions" id="instructions">
+        <button class="close-instructions" onclick="closeInstructions()">×</button>
+        <h4>📝 使い方</h4>
+        <ul>
+            <li><code>#</code> で見出しを作成（ブロック化）</li>
+            <li>見出しの下に内容を記入</li>
+            <li><strong>論点の参照：</strong> <code>> AC-0</code> のように書くと他のブロックを参照できます</li>
+            <li>参照されたブロックには自動的にバッジが表示されます</li>
+            <li>参照リンクやバッジをクリックすると該当ブロックがハイライトされます</li>
+            <li>「保存」でJSON形式で保存</li>
+            <li>「読込」で保存したデータを復元</li>
+            <li>「出力」でMarkdownまたはテキスト形式で出力</li>
+        </ul>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            <strong>参照記法（省略形）：</strong><br>
+            <code>AC</code>=肯定側立論, <code>NQ</code>=否定側質疑, <code>NC</code>=否定側立論, <code>AQ</code>=肯定側質疑<br>
+            <code>1NR</code>=否定側第1反駁, <code>1AR</code>=肯定側第1反駁, <code>2NR</code>=否定側第2反駁, <code>2AR</code>=肯定側第2反駁<br>
+            <strong>例：</strong> <code>> AC-0</code>, <code>> 1NR-2</code>, <code>> 2AR-1</code>
+        </p>
+    </div>
+
+    <div class="export-modal" id="exportModal">
+        <div class="export-modal-content">
+            <div class="export-modal-title">出力形式を選択</div>
+            <div class="export-modal-options">
+                <button class="export-option-btn" onclick="doExport('md')">
+                    <span class="export-option-btn-label">📝 マークダウン (.md)</span>
+                    <span class="export-option-btn-desc">見出しや表を含む形式で出力</span>
+                </button>
+                <button class="export-option-btn" onclick="doExport('txt')">
+                    <span class="export-option-btn-label">📄 テキスト (.txt)</span>
+                    <span class="export-option-btn-desc">プレーンテキスト形式で出力</span>
+                </button>
+            </div>
+            <button class="export-modal-cancel" onclick="closeExportModal()">キャンセル</button>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".json" style="display: none" onchange="handleFileImport(event)">
+
+    <script>
+        // Column definitions based on NADE High School format
+        // Each column can have different content for aff row and neg row
+        const columns = [
+            {
+                affSpeech: { id: 'aff-const', name: '肯定側立論 (AC)', side: 'aff', time: '6分 / 4分' },
+                negSpeech: { id: 'neg-const', name: '否定側立論 (NC)', side: 'neg', time: '6分 / 4分' }
+            },
+            {
+                affSpeech: { id: 'neg-cx', name: '否定側質疑 (NQ)', side: 'neg', time: '3分 / 2分' },
+                negSpeech: { id: 'aff-cx', name: '肯定側質疑 (AQ)', side: 'aff', time: '3分 / 2分' }
+            },
+            {
+                affSpeech: { id: 'neg-1r', name: '否定側第1反駁 (1NR)', side: 'neg', time: '4分 / 3分' },
+                negSpeech: null // 下段は空
+            },
+            {
+                affSpeech: { id: 'aff-1r', name: '肯定側第1反駁 (1AR)', side: 'aff', time: '4分 / 3分' },
+                negSpeech: { id: 'aff-1r-neg', name: '肯定側第1反駁 (1AR)', side: 'aff', time: '4分 / 3分' }
+            },
+            {
+                affSpeech: { id: 'neg-2r', name: '否定側第2反駁 (2NR)', side: 'neg', time: '4分 / 3分' },
+                negSpeech: { id: 'neg-2r-neg', name: '否定側第2反駁 (2NR)', side: 'neg', time: '4分 / 3分' }
+            },
+            {
+                affSpeech: { id: 'aff-2r', name: '肯定側第2反駁 (2AR)', side: 'aff', time: '4分 / 3分' },
+                negSpeech: { id: 'aff-2r-neg', name: '肯定側第2反駁 (2AR)', side: 'aff', time: '4分 / 3分' }
+            }
+        ];
+
+        // Initialize the flow grid
+        function initFlowGrid() {
+            const grid = document.getElementById('flowGrid');
+            grid.innerHTML = '';
+
+            // Create affirmative row (上段: 肯定側の議論)
+            const affSection = document.createElement('div');
+            affSection.className = 'flow-section';
+            affSection.innerHTML = `
+                <div class="flow-section-header">
+                    <div class="flow-row-label aff">肯定側の議論</div>
+                    <div class="timer-container">
+                        <div class="timer-presets">
+                            <button class="timer-preset-btn" onclick="setTimerPreset('aff', 1)">1分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('aff', 2)">2分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('aff', 3)">3分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('aff', 4)">4分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('aff', 5)">5分</button>
+                            <button class="timer-preset-btn active" onclick="setTimerPreset('aff', 6)">6分</button>
+                        </div>
+                        <div class="timer-display" id="timer-aff">6:00</div>
+                        <div class="timer-controls">
+                            <button class="timer-btn" id="timer-aff-btn" onclick="toggleTimer('aff')">開始</button>
+                            <button class="timer-btn reset" onclick="resetTimer('aff')">リセット</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const affRow = document.createElement('div');
+            affRow.className = 'flow-row';
+
+            // Create negative row (下段: 否定側の議論)
+            const negSection = document.createElement('div');
+            negSection.className = 'flow-section';
+            negSection.innerHTML = `
+                <div class="flow-section-header">
+                    <div class="flow-row-label neg">否定側の議論</div>
+                    <div class="timer-container">
+                        <div class="timer-presets">
+                            <button class="timer-preset-btn" onclick="setTimerPreset('neg', 1)">1分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('neg', 2)">2分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('neg', 3)">3分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('neg', 4)">4分</button>
+                            <button class="timer-preset-btn" onclick="setTimerPreset('neg', 5)">5分</button>
+                            <button class="timer-preset-btn active" onclick="setTimerPreset('neg', 6)">6分</button>
+                        </div>
+                        <div class="timer-display" id="timer-neg">6:00</div>
+                        <div class="timer-controls">
+                            <button class="timer-btn" id="timer-neg-btn" onclick="toggleTimer('neg')">開始</button>
+                            <button class="timer-btn reset" onclick="resetTimer('neg')">リセット</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const negRow = document.createElement('div');
+            negRow.className = 'flow-row';
+
+            columns.forEach(colPair => {
+                // 上段（肯定側の議論）
+                if (colPair.affSpeech) {
+                    const affColumn = createColumnFromSpeech(colPair.affSpeech);
+                    affRow.appendChild(affColumn);
+                } else {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'flow-column-spacer';
+                    affRow.appendChild(spacer);
+                }
+
+                // 下段（否定側の議論）
+                if (colPair.negSpeech) {
+                    const negColumn = createColumnFromSpeech(colPair.negSpeech);
+                    negRow.appendChild(negColumn);
+                } else {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'flow-column-spacer';
+                    negRow.appendChild(spacer);
+                }
+            });
+
+            affSection.appendChild(affRow);
+            negSection.appendChild(negRow);
+            grid.appendChild(affSection);
+            grid.appendChild(negSection);
+        }
+
+        // Create a column element from speech definition
+        function createColumnFromSpeech(speech) {
+            const column = document.createElement('div');
+            column.className = 'flow-column';
+
+            column.innerHTML = `
+                <div class="column-header ${speech.side}">
+                    ${speech.name}
+                    <div class="time">${speech.time}</div>
+                </div>
+                <div class="column-content">
+                    <textarea
+                        class="text-input"
+                        data-column="${speech.id}"
+                        placeholder="# 見出し\n内容を入力..."
+                        oninput="updateBlocks('${speech.id}')"
+                    ></textarea>
+                    <div class="block-preview" id="blocks-${speech.id}"></div>
+                </div>
+            `;
+            return column;
+        }
+
+        // Convert column ID to short form
+        function getShortColumnId(columnId) {
+            const columnMap = {
+                'aff-const': 'AC',
+                'neg-cx': 'NQ',
+                'neg-const': 'NC',
+                'aff-cx': 'AQ',
+                'neg-1r': '1NR',
+                'aff-1r': '1AR',
+                'aff-1r-neg': '1AR',  // Both rows use same short ID
+                'neg-2r': '2NR',
+                'neg-2r-neg': '2NR',  // Both rows use same short ID
+                'aff-2r': '2AR',
+                'aff-2r-neg': '2AR'   // Both rows use same short ID
+            };
+            return columnMap[columnId] || columnId;
+        }
+
+        // HTML escape function to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Parse text into blocks
+        function parseBlocks(text, columnId) {
+            const lines = text.split('\n');
+            const blocks = [];
+            let currentBlock = null;
+            const shortId = getShortColumnId(columnId);
+            let blockIndex = 0; // Simple counter for block position
+
+            lines.forEach((line, index) => {
+                if (line.startsWith('#')) {
+                    if (currentBlock) {
+                        blocks.push(currentBlock);
+                    }
+
+                    const title = line.replace(/^#+\s*/, '');
+
+                    // ID is simply based on position: 1st # = 0, 2nd # = 1, etc.
+                    currentBlock = {
+                        id: `${shortId}-${blockIndex}`,
+                        title: title,
+                        content: [],
+                        column: columnId
+                    };
+
+                    blockIndex++;
+                } else if (currentBlock && line.trim()) {
+                    currentBlock.content.push(line);
+                }
+            });
+
+            if (currentBlock) {
+                blocks.push(currentBlock);
+            }
+
+            return blocks;
+        }
+
+        // Parse references in content (> AC-0, > 1NR-2, etc.)
+        function parseReferences(content) {
+            // Match patterns like: > AC-0
+            const refPattern = />\s*([a-zA-Z0-9]+)-(\d+)/gi;
+            const references = [];
+            let match;
+
+            while ((match = refPattern.exec(content)) !== null) {
+                // Normalize to uppercase for consistency
+                const ref = `${match[1].toUpperCase()}-${match[2]}`;
+                references.push(ref);
+            }
+
+            return references;
+        }
+
+        // Convert content with references to HTML
+        function contentWithReferences(content) {
+            // First escape all HTML to prevent XSS
+            const escaped = escapeHtml(content);
+
+            // Then replace reference patterns with clickable links
+            const refPattern = /&gt;\s*([a-zA-Z0-9]+)-(\d+)/gi;
+
+            return escaped.replace(refPattern, (match, prefix, number) => {
+                // Normalize to uppercase
+                const blockId = `${prefix.toUpperCase()}-${number}`;
+
+                // Check if referenced block exists
+                const targetExists = document.querySelector(`[data-block-id="${blockId}"]`) !== null;
+                const className = targetExists ? 'block-reference' : 'block-reference invalid';
+
+                return `<span class="${className}" data-ref-target="${escapeHtml(blockId)}" onclick="highlightBlock('${escapeHtml(blockId)}')">▶ ${escapeHtml(blockId)}</span>`;
+            });
+        }
+
+        // Update blocks display
+        function updateBlocks(columnId) {
+            const textarea = document.querySelector(`textarea[data-column="${columnId}"]`);
+            const preview = document.getElementById(`blocks-${columnId}`);
+            const blocks = parseBlocks(textarea.value, columnId);
+
+            preview.innerHTML = blocks.map(block => {
+                const contentText = block.content.join('\n');
+                const references = parseReferences(contentText);
+                const contentHtml = contentWithReferences(contentText);
+
+                return `
+                    <div class="block-item" data-block-id="${escapeHtml(block.id)}" data-references="${escapeHtml(references.join(','))}">
+                        <span class="block-id">${escapeHtml(block.id)}</span>
+                        <div class="block-title"># ${escapeHtml(block.title)}</div>
+                        <div class="block-content">${contentHtml}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update referenced-by badges
+            updateReferencedByBadges();
+        }
+
+        // Update badges showing which blocks reference this block
+        function updateReferencedByBadges() {
+            // Clear all existing badges
+            document.querySelectorAll('.referenced-by-badge').forEach(el => el.remove());
+
+            // Build reference map
+            const referenceMap = {};
+            document.querySelectorAll('.block-item').forEach(block => {
+                const blockId = block.getAttribute('data-block-id');
+                const refs = block.getAttribute('data-references');
+
+                if (refs) {
+                    refs.split(',').filter(r => r).forEach(refId => {
+                        if (!referenceMap[refId]) {
+                            referenceMap[refId] = [];
+                        }
+                        referenceMap[refId].push(blockId);
+                    });
+                }
+            });
+
+            // Add badges to referenced blocks
+            Object.keys(referenceMap).forEach(targetId => {
+                const targetBlock = document.querySelector(`[data-block-id="${targetId}"]`);
+                if (targetBlock) {
+                    const refFromIds = referenceMap[targetId];
+                    const badgeHtml = `
+                        <div class="referenced-by-badge">
+                            <span>←</span>
+                            ${refFromIds.map(id => `<span class="ref-badge" onclick="highlightBlock('${id}')">${id}</span>`).join('')}
+                        </div>
+                    `;
+                    targetBlock.insertAdjacentHTML('beforeend', badgeHtml);
+                }
+            });
+        }
+
+        // Highlight a block by ID
+        function highlightBlock(blockId) {
+            // Remove previous highlights
+            document.querySelectorAll('.block-item.highlighted').forEach(el => {
+                el.classList.remove('highlighted');
+            });
+
+            // Add highlight to target block
+            const targetBlock = document.querySelector(`[data-block-id="${blockId}"]`);
+            if (targetBlock) {
+                targetBlock.classList.add('highlighted');
+                targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Remove highlight after 3 seconds
+                setTimeout(() => {
+                    targetBlock.classList.remove('highlighted');
+                }, 3000);
+            }
+        }
+
+
+        // Calculate communication points total
+        function calculateCommTotal(side) {
+            const stages = ['const', 'cx', 'response', '1r', '2r'];
+            let total = 0;
+
+            stages.forEach(stage => {
+                const input = document.getElementById(`comm-${side}-${stage}`);
+                const value = parseInt(input.value) || 0;
+                total += value;
+            });
+
+            // Add penalty (which is negative or zero)
+            const penaltySelect = document.getElementById(`comm-${side}-penalty`);
+            const penalty = parseInt(penaltySelect.value) || 0;
+            total += penalty;
+
+            document.getElementById(`comm-${side}-total`).textContent = total;
+        }
+
+        // Update verdict display (placeholder for future use)
+        function updateVerdictDisplay() {
+            // Can be used for validation or additional display logic if needed
+        }
+
+        // Sanitize filename by removing/replacing invalid characters
+        function sanitizeFilename(str) {
+            return str
+                .replace(/[<>:"/\\|?*]/g, '') // Remove invalid filename characters
+                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .replace(/--+/g, '-') // Replace multiple hyphens with single
+                .slice(0, 50); // Limit length
+        }
+
+        // Export data as JSON
+        function exportData() {
+            const data = {
+                meta: {
+                    topic: document.getElementById('topic').value,
+                    affTeam: document.getElementById('affTeam').value,
+                    negTeam: document.getElementById('negTeam').value,
+                    dateTime: document.getElementById('dateTime').value,
+                    author: document.getElementById('author').value
+                },
+                verdict: {
+                    affVotes: document.getElementById('verdictAff').value,
+                    negVotes: document.getElementById('verdictNeg').value,
+                    winner: document.getElementById('verdictWinner').value
+                },
+                judgeComments: document.getElementById('judgeComments').value,
+                commPoints: {
+                    aff: {
+                        const: document.getElementById('comm-aff-const').value,
+                        cx: document.getElementById('comm-aff-cx').value,
+                        response: document.getElementById('comm-aff-response').value,
+                        '1r': document.getElementById('comm-aff-1r').value,
+                        '2r': document.getElementById('comm-aff-2r').value,
+                        penalty: document.getElementById('comm-aff-penalty').value
+                    },
+                    neg: {
+                        const: document.getElementById('comm-neg-const').value,
+                        cx: document.getElementById('comm-neg-cx').value,
+                        response: document.getElementById('comm-neg-response').value,
+                        '1r': document.getElementById('comm-neg-1r').value,
+                        '2r': document.getElementById('comm-neg-2r').value,
+                        penalty: document.getElementById('comm-neg-penalty').value
+                    }
+                },
+                columns: {}
+            };
+
+            // すべてのテキストエリアを取得（both列の-aff/-negサフィックスを持つものも含む）
+            document.querySelectorAll('textarea[data-column]').forEach(textarea => {
+                const columnId = textarea.getAttribute('data-column');
+                data.columns[columnId] = textarea.value;
+            });
+
+            // Format filename: debate-flow-YYYYMMDD--<topic>-<affTeam>-<negTeam>.json
+            const dateStr = data.meta.dateTime ? data.meta.dateTime.replace(/\//g, '') : new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const topic = data.meta.topic ? sanitizeFilename(data.meta.topic) : 'no-topic';
+            const affTeam = data.meta.affTeam ? sanitizeFilename(data.meta.affTeam) : 'no-aff';
+            const negTeam = data.meta.negTeam ? sanitizeFilename(data.meta.negTeam) : 'no-neg';
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `debate-flow-${dateStr}--${topic}-${affTeam}-${negTeam}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Show export modal
+        function exportMarkdown() {
+            document.getElementById('exportModal').classList.add('show');
+        }
+
+        // Close export modal
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.remove('show');
+        }
+
+        // Do export with selected format
+        function doExport(format) {
+            closeExportModal();
+
+            const topic = document.getElementById('topic').value || '（未設定）';
+            const affTeam = document.getElementById('affTeam').value || '（未設定）';
+            const negTeam = document.getElementById('negTeam').value || '（未設定）';
+            const dateTime = document.getElementById('dateTime').value || '（未設定）';
+            const author = document.getElementById('author').value || '（未設定）';
+
+            const verdictAff = document.getElementById('verdictAff').value || '0';
+            const verdictNeg = document.getElementById('verdictNeg').value || '0';
+            const verdictWinner = document.getElementById('verdictWinner').value;
+            const winnerText = verdictWinner === 'aff' ? '肯定側' : verdictWinner === 'neg' ? '否定側' : '（未判定）';
+
+            const judgeComments = document.getElementById('judgeComments').value || '（コメントなし）';
+
+            // Communication points
+            const commAffConst = document.getElementById('comm-aff-const').value || '-';
+            const commAffCx = document.getElementById('comm-aff-cx').value || '-';
+            const commAffResponse = document.getElementById('comm-aff-response').value || '-';
+            const commAff1r = document.getElementById('comm-aff-1r').value || '-';
+            const commAff2r = document.getElementById('comm-aff-2r').value || '-';
+            const commAffPenalty = document.getElementById('comm-aff-penalty').value || '0';
+            const commAffTotal = document.getElementById('comm-aff-total').textContent || '0';
+
+            const commNegConst = document.getElementById('comm-neg-const').value || '-';
+            const commNegCx = document.getElementById('comm-neg-cx').value || '-';
+            const commNegResponse = document.getElementById('comm-neg-response').value || '-';
+            const commNeg1r = document.getElementById('comm-neg-1r').value || '-';
+            const commNeg2r = document.getElementById('comm-neg-2r').value || '-';
+            const commNegPenalty = document.getElementById('comm-neg-penalty').value || '0';
+            const commNegTotal = document.getElementById('comm-neg-total').textContent || '0';
+
+            // Helper function to wrap content in code block
+            const wrapContent = (content) => {
+                if (!content.trim()) {
+                    return '（記入なし）';
+                }
+                return '```\n' + content + '\n```';
+            };
+
+            // Construct markdown
+            let markdown = `# ディベートフローシート\n\n`;
+
+            // Meta info
+            markdown += `## 試合情報\n\n`;
+            markdown += `**論題**: ${topic}\n\n`;
+            markdown += `**肯定側**: ${affTeam}\n\n`;
+            markdown += `**否定側**: ${negTeam}\n\n`;
+            markdown += `**日時**: ${dateTime}\n\n`;
+            markdown += `**記入者**: ${author}\n\n`;
+
+            // Verdict
+            markdown += `## 試合結果\n\n`;
+            markdown += `**判定**: ${verdictAff} - ${verdictNeg} で **${winnerText}** の勝利\n\n`;
+
+            // Communication Points
+            markdown += `## コミュニケーション点\n\n`;
+            markdown += `| | 立論 | 質疑 | 応答 | 第1反駁 | 第2反駁 | 減点 | 合計 |\n`;
+            markdown += `|---|---|---|---|---|---|---|---|\n`;
+            markdown += `| **肯定側** | ${commAffConst} | ${commAffCx} | ${commAffResponse} | ${commAff1r} | ${commAff2r} | ${commAffPenalty} | **${commAffTotal}** |\n`;
+            markdown += `| **否定側** | ${commNegConst} | ${commNegCx} | ${commNegResponse} | ${commNeg1r} | ${commNeg2r} | ${commNegPenalty} | **${commNegTotal}** |\n\n`;
+
+            // Judge comments
+            markdown += `## 講評\n\n`;
+            markdown += `${judgeComments}\n\n`;
+
+            // Speech content in order
+            markdown += `## 試合内容\n\n`;
+
+            // Single-row speeches
+            const affConstContent = document.querySelector('textarea[data-column="aff-const"]')?.value || '';
+            const negCxContent = document.querySelector('textarea[data-column="neg-cx"]')?.value || '';
+            const negConstContent = document.querySelector('textarea[data-column="neg-const"]')?.value || '';
+            const affCxContent = document.querySelector('textarea[data-column="aff-cx"]')?.value || '';
+            const neg1rContent = document.querySelector('textarea[data-column="neg-1r"]')?.value || '';
+
+            markdown += `### 肯定側立論\n\n${wrapContent(affConstContent)}\n\n`;
+            markdown += `### 否定側質疑\n\n${wrapContent(negCxContent)}\n\n`;
+            markdown += `### 否定側立論\n\n${wrapContent(negConstContent)}\n\n`;
+            markdown += `### 肯定側質疑\n\n${wrapContent(affCxContent)}\n\n`;
+            markdown += `### 否定側第1反駁\n\n${wrapContent(neg1rContent)}\n\n`;
+
+            // Two-row speeches (aff-1r, neg-2r, aff-2r)
+            const aff1rAffContent = document.querySelector('textarea[data-column="aff-1r"]')?.value || '';
+            const aff1rNegContent = document.querySelector('textarea[data-column="aff-1r-neg"]')?.value || '';
+
+            markdown += `### 肯定側第1反駁\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(aff1rAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(aff1rNegContent)}\n\n`;
+
+            const neg2rAffContent = document.querySelector('textarea[data-column="neg-2r"]')?.value || '';
+            const neg2rNegContent = document.querySelector('textarea[data-column="neg-2r-neg"]')?.value || '';
+
+            markdown += `### 否定側第2反駁\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(neg2rAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(neg2rNegContent)}\n\n`;
+
+            const aff2rAffContent = document.querySelector('textarea[data-column="aff-2r"]')?.value || '';
+            const aff2rNegContent = document.querySelector('textarea[data-column="aff-2r-neg"]')?.value || '';
+
+            markdown += `### 肯定側第2反駁\n\n`;
+            markdown += `#### 肯定側の議論\n\n${wrapContent(aff2rAffContent)}\n\n`;
+            markdown += `#### 否定側の議論\n\n${wrapContent(aff2rNegContent)}\n\n`;
+
+            // Generate filename
+            const dateStr = dateTime ? dateTime.replace(/\//g, '') : new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const topicSafe = topic ? sanitizeFilename(topic) : 'no-topic';
+            const affTeamSafe = affTeam ? sanitizeFilename(affTeam) : 'no-aff';
+            const negTeamSafe = negTeam ? sanitizeFilename(negTeam) : 'no-neg';
+            const baseFilename = `debate-flow-${dateStr}--${topicSafe}-${affTeamSafe}-${negTeamSafe}`;
+
+            // Export based on selected format
+            if (format === 'md') {
+                // Export as .md
+                const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${baseFilename}.md`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } else if (format === 'txt') {
+                // Export as .txt
+                const blob = new Blob([markdown], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${baseFilename}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        // Import data from JSON
+        function importData() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // Validate that data is an object
+                    if (typeof data !== 'object' || data === null) {
+                        throw new Error('Invalid file format');
+                    }
+
+                    // Restore meta
+                    if (data.meta) {
+                        document.getElementById('topic').value = data.meta.topic || '';
+                        document.getElementById('affTeam').value = data.meta.affTeam || '';
+                        document.getElementById('negTeam').value = data.meta.negTeam || '';
+                        document.getElementById('dateTime').value = data.meta.dateTime || '';
+                        document.getElementById('author').value = data.meta.author || '';
+                    }
+
+                    // Restore verdict
+                    if (data.verdict) {
+                        document.getElementById('verdictAff').value = data.verdict.affVotes || '';
+                        document.getElementById('verdictNeg').value = data.verdict.negVotes || '';
+                        document.getElementById('verdictWinner').value = data.verdict.winner || '';
+                    }
+
+                    // Restore judge comments
+                    document.getElementById('judgeComments').value = data.judgeComments || '';
+
+                    // Restore communication points
+                    if (data.commPoints) {
+                        if (data.commPoints.aff) {
+                            document.getElementById('comm-aff-const').value = data.commPoints.aff.const || '';
+                            document.getElementById('comm-aff-cx').value = data.commPoints.aff.cx || '';
+                            document.getElementById('comm-aff-response').value = data.commPoints.aff.response || '';
+                            document.getElementById('comm-aff-1r').value = data.commPoints.aff['1r'] || '';
+                            document.getElementById('comm-aff-2r').value = data.commPoints.aff['2r'] || '';
+                            document.getElementById('comm-aff-penalty').value = data.commPoints.aff.penalty || '0';
+                            calculateCommTotal('aff');
+                        }
+                        if (data.commPoints.neg) {
+                            document.getElementById('comm-neg-const').value = data.commPoints.neg.const || '';
+                            document.getElementById('comm-neg-cx').value = data.commPoints.neg.cx || '';
+                            document.getElementById('comm-neg-response').value = data.commPoints.neg.response || '';
+                            document.getElementById('comm-neg-1r').value = data.commPoints.neg['1r'] || '';
+                            document.getElementById('comm-neg-2r').value = data.commPoints.neg['2r'] || '';
+                            document.getElementById('comm-neg-penalty').value = data.commPoints.neg.penalty || '0';
+                            calculateCommTotal('neg');
+                        }
+                    }
+
+                    // Restore columns（すべてのテキストエリアに対して復元）
+                    if (data.columns) {
+                        document.querySelectorAll('textarea[data-column]').forEach(textarea => {
+                            const columnId = textarea.getAttribute('data-column');
+                            textarea.value = data.columns[columnId] || '';
+                        });
+                    }
+
+                    // Update all displays（すべてのカラムIDに対して更新）
+                    document.querySelectorAll('textarea[data-column]').forEach(textarea => {
+                        const columnId = textarea.getAttribute('data-column');
+                        updateBlocks(columnId);
+                    });
+
+                } catch (err) {
+                    console.error('File import error:', err);
+                    alert('ファイルの読み込みに失敗しました。正しいフォーマットのJSONファイルか確認してください。');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Clear all data
+        function clearAll() {
+            if (!confirm('すべてのデータをクリアしますか？')) return;
+
+            document.getElementById('topic').value = '';
+            document.getElementById('affTeam').value = '';
+            document.getElementById('negTeam').value = '';
+            document.getElementById('dateTime').value = '';
+            document.getElementById('author').value = '';
+
+            // Clear verdict
+            document.getElementById('verdictAff').value = '';
+            document.getElementById('verdictNeg').value = '';
+            document.getElementById('verdictWinner').value = '';
+
+            // Clear judge comments
+            document.getElementById('judgeComments').value = '';
+
+            // Clear communication points
+            ['aff', 'neg'].forEach(side => {
+                ['const', 'cx', 'response', '1r', '2r'].forEach(stage => {
+                    document.getElementById(`comm-${side}-${stage}`).value = '';
+                });
+                document.getElementById(`comm-${side}-penalty`).value = '0';
+                calculateCommTotal(side);
+            });
+
+            // すべてのテキストエリアをクリア
+            document.querySelectorAll('textarea[data-column]').forEach(textarea => {
+                const columnId = textarea.getAttribute('data-column');
+                textarea.value = '';
+                updateBlocks(columnId);
+            });
+        }
+
+        // Toggle instructions visibility
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            const isVisible = instructions.style.display !== 'none';
+            instructions.style.display = isVisible ? 'none' : 'block';
+        }
+
+        // Close instructions (keep for backward compatibility with close button)
+        function closeInstructions() {
+            document.getElementById('instructions').style.display = 'none';
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('debate-flowsheet-theme', newTheme);
+
+            updateThemeButton(newTheme);
+        }
+
+        // Update theme button text
+        function updateThemeButton(theme) {
+            const btn = document.getElementById('themeBtn');
+            if (theme === 'light') {
+                btn.innerHTML = '☀️ ライト';
+            } else {
+                btn.innerHTML = '🌙 ダーク';
+            }
+        }
+
+        // Load theme from localStorage
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('debate-flowsheet-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        // Timer functionality
+        const timers = {
+            aff: {
+                interval: null,
+                timeLeft: 360, // seconds (6 minutes default)
+                preset: 6,
+                running: false
+            },
+            neg: {
+                interval: null,
+                timeLeft: 360, // seconds (6 minutes default)
+                preset: 6,
+                running: false
+            }
+        };
+
+        // Format seconds to MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // Update timer display
+        function updateTimerDisplay(side) {
+            const display = document.getElementById(`timer-${side}`);
+            const timeLeft = timers[side].timeLeft;
+
+            display.textContent = formatTime(timeLeft);
+
+            // Remove all classes first
+            display.classList.remove('warning', 'critical');
+
+            // Add warning/critical classes based on time left
+            if (timeLeft <= 30 && timeLeft > 0) {
+                display.classList.add('critical');
+            } else if (timeLeft <= 60) {
+                display.classList.add('warning');
+            }
+        }
+
+        // Set timer preset
+        function setTimerPreset(side, minutes) {
+            // Stop timer if running
+            if (timers[side].running) {
+                toggleTimer(side);
+            }
+
+            // Update preset
+            timers[side].preset = minutes;
+            timers[side].timeLeft = minutes * 60;
+
+            // Update display
+            updateTimerDisplay(side);
+
+            // Update active preset button
+            const container = document.getElementById(`timer-${side}`).parentElement;
+            container.querySelectorAll('.timer-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Toggle timer (start/pause)
+        function toggleTimer(side) {
+            const timer = timers[side];
+            const btn = document.getElementById(`timer-${side}-btn`);
+
+            if (timer.running) {
+                // Pause timer
+                clearInterval(timer.interval);
+                timer.interval = null;
+                timer.running = false;
+                btn.textContent = '再開';
+            } else {
+                // Start timer
+                timer.running = true;
+                btn.textContent = '停止';
+
+                timer.interval = setInterval(() => {
+                    timer.timeLeft--;
+                    updateTimerDisplay(side);
+
+                    // Stop at 0
+                    if (timer.timeLeft <= 0) {
+                        clearInterval(timer.interval);
+                        timer.interval = null;
+                        timer.running = false;
+                        btn.textContent = '開始';
+
+                        // Optional: Play sound or alert (can be enabled later)
+                        // alert(`${side === 'aff' ? '肯定側' : '否定側'}のタイムアップ！`);
+                    }
+                }, 1000);
+            }
+        }
+
+        // Reset timer
+        function resetTimer(side) {
+            // Stop timer if running
+            if (timers[side].running) {
+                clearInterval(timers[side].interval);
+                timers[side].interval = null;
+                timers[side].running = false;
+
+                const btn = document.getElementById(`timer-${side}-btn`);
+                btn.textContent = '開始';
+            }
+
+            // Reset to preset time
+            timers[side].timeLeft = timers[side].preset * 60;
+            updateTimerDisplay(side);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            initFlowGrid();
+
+            // Set today's date
+            const today = new Date();
+            document.getElementById('dateTime').value =
+                `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Flowsheet - ディベートフローアプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Hiragino Sans", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .tagline {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .card-badge.coming-soon {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .card h2 {
+            font-size: 28px;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 16px;
+        }
+
+        .card p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-features {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .card-features li {
+            padding: 6px 0;
+            color: #4a5568;
+            font-size: 14px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .card-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn-disabled {
+            background: #cbd5e0;
+            color: #718096;
+            cursor: not-allowed;
+        }
+
+        .btn-disabled:hover {
+            background: #cbd5e0;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 32px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-note {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 640px) {
+            .logo {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 16px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📋 Debate Flowsheet</div>
+            <div class="tagline">オフラインで動作するディベートフローアプリ</div>
+        </div>
+
+        <div class="cards">
+            <!-- 1CON Card -->
+            <a href="1con/" class="card">
+                <span class="card-badge">利用可能</span>
+                <h2>1CON形式</h2>
+                <div class="card-subtitle">立論1回形式（高校ディベート形式）</div>
+                <p>日本ディベート協会（NADE）の高校ディベート形式に対応。</p>
+                <ul class="card-features">
+                    <li>判定・評価記録機能</li>
+                    <li>完全オフライン動作</li>
+                </ul>
+                <span class="btn">アプリを起動 →</span>
+            </a>
+
+            <!-- 2CON Card -->
+            <a href="2con/" class="card">
+                <span class="card-badge coming-soon">準備中</span>
+                <h2>2CON形式</h2>
+                <div class="card-subtitle">立論2回形式（大学・社会人ディベート形式）</div>
+                <p>肯定側・否定側それぞれ立論2回の試合形式に対応予定。</p>
+                <ul class="card-features">
+                    <li>判定・評価記録機能</li>
+                    <li>完全オフライン動作</li>
+                </ul>
+                <span class="btn">詳細を見る →</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://github.com/mikisayaka19/debate-flowsheet" target="_blank">📦 GitHub</a>
+                <a href="https://github.com/mikisayaka19/debate-flowsheet/issues" target="_blank">🐛 バグ報告</a>
+                <a href="README.md">📖 使い方</a>
+            </div>
+            <div class="footer-note">
+                MIT License | 完全オフライン動作 | データは外部送信されません<br>
+                ※このアプリはNADE非公式です
+            </div>
+        </div>
+    </div>
+</body>
+</html>
