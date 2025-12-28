@@ -15,7 +15,7 @@
 - **2CON形式** - 2立論形式（大学・社会人ディベート） 🚧 準備中
 
 ## 👉 デモページ
-🔗 [https://mikisayaka19.github.io/debate-flowsheet/](https://mikisayaka19.github.io/debate-flowsheet/)
+🔗 [https://mikisayaka19.github.io/debate-flowsheet/](https://mikisayaka19.github.io/debate-flowsheet/){:target="_blank"}
 
 ブラウザで直接お試しいただけます。フロー内容はローカルで完結しサーバーに送信されません。
 
