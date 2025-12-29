@@ -41,7 +41,7 @@ debate-flow-YYYYMMDD--<論題>-<肯定側>-<否定側>.json
     "topic": "日本は首相公選制を導入すべきである。是か非か",
     "affTeam": "A高校",
     "negTeam": "B高校",
-    "dateTime": "2024/12/21",
+    "dateTime": "2025/12/21",
     "author": "ジャッジ名"
   },
   "verdict": {
@@ -92,7 +92,7 @@ debate-flow-YYYYMMDD--<論題>-<肯定側>-<否定側>.json
     "topic": "日本は首相公選制を導入すべきである。是か非か",
     "affTeam": "C大学",
     "negTeam": "D大学",
-    "dateTime": "2024/12/21",
+    "dateTime": "2025/12/21",
     "author": "ジャッジ名"
   },
   "verdict": {
